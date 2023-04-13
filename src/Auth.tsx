@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import pb from './lib/pocketbase'
 import { useForm } from 'react-hook-form'
+import useLogout from './hooks/useLogout'
 
 export default function Auth() {
+
+    const logout = useLogout()
 
     const { register, handleSubmit } = useForm()
 
@@ -15,7 +18,7 @@ export default function Auth() {
     async function login(data: any) {
         setLoading(true)
         try {
-            const authData = await pb.collection('users').authWithPassword(data.email, data.password)
+            await pb.collection('users').authWithPassword(data.email, data.password)
         }
         catch (e) {
             console.log(e)
@@ -23,12 +26,6 @@ export default function Auth() {
         setLoading(false)
         setDummy(!dummy)
     }
-
-    function logout() {
-        pb.authStore.clear()
-        setDummy(!dummy)
-    }
-
 
     if (loggedIn) return <>
         Logged In: {pb.authStore.model?.email}
