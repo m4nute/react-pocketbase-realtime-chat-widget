@@ -8,19 +8,39 @@ export default function Auth() {
 
     const [loading, setLoading] = useState(false)
 
+    const [dummy, setDummy] = useState(false)
+
+    const loggedIn = pb.authStore.isValid
+
     async function login(data: any) {
         setLoading(true)
-        const authData = await pb.collection('users').authWithPassword(data.email, data.password)
+        try {
+            const authData = await pb.collection('users').authWithPassword(data.email, data.password)
+        }
+        catch (e) {
+            console.log(e)
+        }
         setLoading(false)
+        setDummy(!dummy)
     }
 
-    return <>
-        Logged in: {pb.authStore.isValid.toString()}
+    function logout() {
+        pb.authStore.clear()
+        setDummy(!dummy)
+    }
+
+
+    if (loggedIn) return <>
+        Logged In: {pb.authStore.model?.email}
+        <br />
+        <button onClick={logout}>Log Out</button>
+    </>
+    return (
         <form onSubmit={handleSubmit(login)}>
+            {loading && 'Loading...'}
             <input type="text" placeholder='email' {...register('email')} />
             <input type="password" placeholder='password' {...register('password')} />
-            <button type='submit'>Login</button>
+            <button type='submit' disabled={loading}>{loading ? "Loading" : "Login"}</button>
         </form>
-    </>
-
+    )
 }
