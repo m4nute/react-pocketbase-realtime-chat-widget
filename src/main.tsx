@@ -1,15 +1,58 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App'
 import './index.css'
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+import { QueryClientProvider, QueryClient, } from '@tanstack/react-query'
+import {
+  Outlet,
+  RouterProvider,
+  Link,
+  Router,
+  Route,
+  RootRoute,
+} from '@tanstack/router'
+import Auth from './Auth'
+import App from './App'
 
 const queryClient = new QueryClient()
 
+const rootRoute = new RootRoute({
+  component: Root,
+})
+
+function Root() {
+  return (
+    <>
+      <div>
+        <Link to="/">Home</Link> <Link to="/chats">Start Chatting</Link>
+      </div>
+      <Outlet />
+    </>
+  )
+}
+
+const indexRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/',
+  component: Auth,
+})
+const chatsRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: 'chats',
+  component: App,
+})
+
+const routeTree = rootRoute.addChildren([indexRoute, chatsRoute])
+
+// Create the router using your route tree
+const router = new Router({ routeTree })
+
+declare module '@tanstack/router' {
+  interface Register {
+    router: typeof router
+  }
+}
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
-  </React.StrictMode>,
+  <QueryClientProvider client={queryClient}>
+    <RouterProvider router={router} />
+  </QueryClientProvider>
 )

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^4.29.3",
+    "@tanstack/router": "0.0.1-beta.84",
     "pocketbase": "^0.13.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

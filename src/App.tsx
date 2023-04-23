@@ -1,9 +1,9 @@
-import Auth from './Auth'
+export default function App() {
 
-function App() {
   return (
-    <Auth />
+    <div>hola! index</div>
   )
 }
 
-export default App
+
+

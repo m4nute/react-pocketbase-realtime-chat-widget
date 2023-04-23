@@ -2,6 +2,7 @@ import pb from './lib/pocketbase'
 import { useForm } from 'react-hook-form'
 import useLogout from './hooks/useLogout'
 import useLogin from './hooks/useLogin'
+import { Link } from '@tanstack/router'
 
 export default function Auth() {
 
@@ -9,8 +10,6 @@ export default function Auth() {
     const logout = useLogout()
     const { mutate, isLoading, isError } = useLogin()
     const { register, handleSubmit, reset } = useForm()
-
-
     async function onSubmit(data: any) {
         mutate({ email: data.email, password: data.password })
         reset()
@@ -20,6 +19,7 @@ export default function Auth() {
         Logged In: {pb.authStore.model?.email}
         <br />
         <button onClick={logout}>Log Out</button>
+        <br />
     </>
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
