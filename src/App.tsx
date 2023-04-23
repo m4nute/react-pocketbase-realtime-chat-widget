@@ -1,6 +1,6 @@
+import { Link } from '@tanstack/router'
 import pb from './lib/pocketbase'
 import { useQuery } from '@tanstack/react-query'
-
 export default function App() {
 
   const userEmail = pb.authStore.model?.email
@@ -30,9 +30,9 @@ export default function App() {
         <h2>Chats:</h2>
         {isLoading && 'loading'}
         {data?.map((chat: any, index) => {
-          return <div key={index}>
+          return <Link key={index} to={`/chats/$chatId`} params={{ chatId: chat.id }}>
             {chat.expand.users[0].id === pb.authStore.model?.id ? chat.expand.users[1].username : chat.expand.users[0].username}
-          </div>
+          </Link>
         })}
       </div>
     </>

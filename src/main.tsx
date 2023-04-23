@@ -10,6 +10,7 @@ import {
 } from '@tanstack/router'
 import Auth from './Auth'
 import App from './App'
+import ChatId from './ChatId'
 
 const queryClient = new QueryClient()
 
@@ -36,7 +37,15 @@ const chatsRoute = new Route({
   component: App,
 })
 
-const routeTree = rootRoute.addChildren([indexRoute, chatsRoute])
+const chatIdRoute = new Route({
+  getParentRoute: () => chatsRoute,
+  path: '$chatId',
+  component: ChatId,
+})
+
+
+
+const routeTree = rootRoute.addChildren([indexRoute, chatsRoute.addChildren([chatIdRoute])])
 
 // Create the router using your route tree
 const router = new Router({ routeTree })
