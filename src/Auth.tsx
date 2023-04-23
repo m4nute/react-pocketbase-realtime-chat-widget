@@ -16,7 +16,7 @@ export default function Auth() {
     const loggedIn = pb.authStore.isValid
 
     async function onSubmit(data: any) {
-
+        login({ email: data.email, password: data.password })
         reset()
     }
 
