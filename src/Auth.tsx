@@ -11,8 +11,6 @@ export default function Auth() {
     const { register, handleSubmit, reset } = useForm()
 
 
-    const [dummy, setDummy] = useState(false)
-
     const loggedIn = pb.authStore.isValid
 
     async function onSubmit(data: any) {
