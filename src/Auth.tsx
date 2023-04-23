@@ -20,6 +20,7 @@ export default function Auth() {
         <br />
         <button onClick={logout}>Log Out</button>
         <br />
+        <Link to='chats'>Chats</Link>
     </>
     return (
         <form onSubmit={handleSubmit(onSubmit)}>

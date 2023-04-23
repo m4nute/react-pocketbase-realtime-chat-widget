@@ -1,10 +1,9 @@
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import { QueryClientProvider, QueryClient, } from '@tanstack/react-query'
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import {
   Outlet,
   RouterProvider,
-  Link,
   Router,
   Route,
   RootRoute,
@@ -21,9 +20,6 @@ const rootRoute = new RootRoute({
 function Root() {
   return (
     <>
-      <div>
-        <Link to="/">Home</Link> <Link to="/chats">Start Chatting</Link>
-      </div>
       <Outlet />
     </>
   )
