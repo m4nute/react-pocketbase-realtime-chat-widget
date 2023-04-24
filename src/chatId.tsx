@@ -5,10 +5,11 @@ import { useQuery } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { useCallback, useEffect } from "react"
 import { createMessage } from "./lib/pocketbase"
+import AdminChats from "./AdminChats"
 export default function ChatId() {
   const [match, params] = useRoute("/chats/:id")
 
-  const { data, isFetching, refetch } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ["userChats"],
     queryFn: useCallback(() => getChatMessages(params?.id), [params?.id]),
   })
@@ -37,16 +38,7 @@ export default function ChatId() {
 
   return (
     <div>
-      {data?.map((message: any, index) => {
-        return (
-          <div key={index}>
-            {!message.admin
-              ? `User: ${message.text}`
-              : `Admin: ${message.text}`}
-            <br />
-          </div>
-        )
-      })}
+      <AdminChats data={data} />
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
           type="text"
