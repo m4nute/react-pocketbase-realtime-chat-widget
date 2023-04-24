@@ -1,21 +1,13 @@
-import pb from "./lib/pocketbase"
-import { useQuery } from "@tanstack/react-query"
+import pb, {
+  createMessage,
+  createNewChat,
+  updateTotalMessages,
+} from "./lib/pocketbase"
 import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 
 export default function App() {
   let fp: string | null
-  const userEmail = pb.authStore.model?.email
-
-  // const getUserChats = async () => {
-  //   return await pb.collection('chats').getFullList({
-  //     sort: 'created',
-  //     expand: 'users',
-  //     filter: `users ~ '${pb.authStore.model?.id}'`
-  //   })
-  // }
-
-  // const { data, isLoading } = useQuery({ queryKey: ['userChats'], queryFn: getUserChats })
 
   useEffect(() => {
     fp = localStorage.getItem("fingerprint")
@@ -30,20 +22,14 @@ export default function App() {
         .collection("chats")
         .getFirstListItem(`userFP="${fp}"`)
 
-      pb.collection("messages").create({
-        text: message,
-        chatId: existentChat.id,
-      })
-      pb.collection("chats").update(existentChat.id, {
-        totalMessages: existentChat.totalMessages + 1,
-        userFP: fp,
-      })
+      createMessage({ text: message, chatId: existentChat.id })
+      updateTotalMessages(existentChat.id)
       return
     } catch (error) {
-      const newChat = await pb
-        .collection("chats")
-        .create({ totalMessages: 1, userFP: fp })
-      pb.collection("messages").create({ text: message, chatId: newChat.id })
+      if (fp) {
+        const newChat = await createNewChat(fp)
+        createMessage({ text: message, chatId: newChat.id })
+      }
     }
   }
 
@@ -61,14 +47,6 @@ export default function App() {
           Submit
         </button>
       </form>
-      {/* <div>
-        {isLoading && 'loading'}
-        {data?.map((chat: any, index) => {
-          return <Link key={index} to={`/chats/$chatId`} params={{ chatId: chat.id }}>
-            {chat.expand.users[0].id === pb.authStore.model?.id ? chat.expand.users[1].username : chat.expand.users[0].username}
-          </Link>
-        })}
-      </div> */}
     </>
   )
 }

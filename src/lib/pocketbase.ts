@@ -20,3 +20,9 @@ export const getChatMessages = async (chatId: string) => {
       .collection("messages")
       .getFullList({ filter: `chatId="${chatId}"` })
   }
+
+export const createNewChat = async (fp: string) => {
+    return await pb
+    .collection("chats")
+    .create({ totalMessages: 1, userFP: fp })
+}
