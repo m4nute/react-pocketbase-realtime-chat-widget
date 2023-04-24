@@ -2,9 +2,9 @@ import pb from './lib/pocketbase'
 import { useForm } from 'react-hook-form'
 import useLogout from './hooks/useLogout'
 import useLogin from './hooks/useLogin'
-import { Link } from '@tanstack/router'
+import { Link } from 'wouter'
+export default function Auth() {    
 
-export default function Auth() {
 
     const loggedIn = pb.authStore.isValid
     const logout = useLogout()
@@ -22,6 +22,7 @@ export default function Auth() {
         <br />
         <Link to='chats'>Chats</Link>
     </>
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             {isLoading && 'Loading...'}
