@@ -11,25 +11,23 @@ export default function App() {
 
   useEffect(() => {
     fp = localStorage.getItem("fingerprint")
-    if (!fp) localStorage.setItem("fingerprint", crypto.randomUUID())
+    if (!fp) localStorage.setItem("fingerprint", crypto.randomUUID().replace(/-/g, '').slice(0, 15))
   }, [])
 
   async function onSubmit({ message }: any) {
+    fp = localStorage.getItem("fingerprint")
+    if (!fp) return
     reset()
     try {
-      fp = localStorage.getItem("fingerprint")
-      const existentChat = await pb
+      await pb
         .collection("chats")
-        .getFirstListItem(`userFP="${fp}"`)
+        .getFirstListItem(`id="${fp}"`)
 
-      createMessage({ text: message, chatId: existentChat.id })
-      updateTotalMessages(existentChat.id)
-      return
+      createMessage({ text: message, chatId: fp })
+      updateTotalMessages(fp)
     } catch (error) {
-      if (fp) {
-        const newChat = await createNewChat(fp)
-        createMessage({ text: message, chatId: newChat.id })
-      }
+        await createNewChat(fp)
+        createMessage({ text: message, chatId: fp, admin: false })
     }
   }
 

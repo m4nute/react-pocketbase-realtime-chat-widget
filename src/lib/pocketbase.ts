@@ -24,5 +24,5 @@ export const getChatMessages = async (chatId: string) => {
 export const createNewChat = async (fp: string) => {
     return await pb
     .collection("chats")
-    .create({ totalMessages: 1, userFP: fp })
+    .create({ totalMessages: 1, id: fp })
 }
