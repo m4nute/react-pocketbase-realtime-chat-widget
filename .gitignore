@@ -7,7 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-pocketbase_0.15.1_linux_amd64
+pb
 node_modules
 dist
 dist-ssr
