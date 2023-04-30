@@ -28,7 +28,7 @@ export default function ChatId() {
 
   useEffect(() => {
     params?.id &&
-      pb.collection("chats").subscribe(params?.id, function (e) {
+      pb.collection("chats").subscribe(params?.id, function () {
         refetch()
       })
     return () => {

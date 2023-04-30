@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
 import pb from "./lib/pocketbase"
 import { Link } from "wouter"
+import { useEffect } from "react"
+
 export default function Chats() {
   const getUserChats = async () => {
     return await pb.collection("chats").getFullList({
@@ -8,7 +10,16 @@ export default function Chats() {
     })
   }
 
-  const { data, isLoading } = useQuery({
+  useEffect(() => {
+      pb.collection("chats").subscribe('*', function () {
+        refetch()
+      })
+    return () => {
+      pb.collection("chats").unsubscribe('*')
+    }
+  }, [])
+
+  const { data, refetch } = useQuery({
     queryKey: ["userChats"],
     queryFn: getUserChats,
   })

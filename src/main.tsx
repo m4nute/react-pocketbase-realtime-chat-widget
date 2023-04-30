@@ -6,6 +6,7 @@ import Auth from './Auth'
 import App from './App'
 import Chats from './Chats'
 import ChatId from './chatId'
+import ChatWidget from './ChatWidget'
 
 const queryClient = new QueryClient()
 
@@ -16,5 +17,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <Route path='/admin' component={Auth}>Admin</Route>
     <Route path='/chats' component={Chats}>Admin</Route>
     <Route path='/chats/:userFP' component={ChatId}>Admin</Route>
+    <Route path='/iframe' component={ChatWidget}>Admin</Route>
   </QueryClientProvider>
 )

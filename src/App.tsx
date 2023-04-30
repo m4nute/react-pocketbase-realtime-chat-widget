@@ -1,23 +1,35 @@
+import { useQuery } from "@tanstack/react-query"
 import pb, {
   createMessage,
   createNewChat,
+  getChatMessages,
   updateTotalMessages,
 } from "./lib/pocketbase"
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
 import { useForm } from "react-hook-form"
+import AdminChats from "./AdminChats"
 
 export default function App() {
-  let fp: string | null
+  let fp: string = localStorage.getItem('fingerprint')!
 
   useEffect(() => {
-    fp = localStorage.getItem("fingerprint")
     if (!fp) localStorage.setItem("fingerprint", crypto.randomUUID().replace(/-/g, '').slice(0, 15))
+
+    pb.collection("chats").subscribe(fp, function () {
+        refetch()
+    })
+    return () => {
+      pb.collection("chats").unsubscribe(fp)
+    }
   }, [])
 
+  const { data, refetch } = useQuery({
+    queryKey: ["fpChats"],
+    queryFn: useCallback(() => getChatMessages(fp), [fp]),
+  })
+
   async function onSubmit({ message }: any) {
-    fp = localStorage.getItem("fingerprint")
     if (!fp) return
-    reset()
     try {
       await pb
         .collection("chats")
@@ -28,13 +40,19 @@ export default function App() {
     } catch (error) {
         await createNewChat(fp)
         createMessage({ text: message, chatId: fp, admin: false })
+        setTimeout(() => {
+        refetch()
+        }, 100);
+
     }
+    reset()
   }
 
   const { register, handleSubmit, watch, reset } = useForm()
 
   return (
-    <>
+    <div id="flex">
+      <AdminChats data={data} />
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
           type="text"
@@ -45,6 +63,6 @@ export default function App() {
           Submit
         </button>
       </form>
-    </>
+    </div>
   )
 }
